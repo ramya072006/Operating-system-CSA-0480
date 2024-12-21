@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main() {
+    int n, bt[10], wt[10] = {0}, tat[10], i, j, temp, pid[10];
+    float avg_tat = 0, avg_wt = 0;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter burst times: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &bt[i]);
+        pid[i] = i + 1;
+    }
+
+    // Sort by burst time
+    for (i = 0; i < n - 1; i++)
+        for (j = i + 1; j < n; j++)
+            if (bt[i] > bt[j]) {
+                temp = bt[i]; bt[i] = bt[j]; bt[j] = temp;
+                temp = pid[i]; pid[i] = pid[j]; pid[j] = temp;
+            }
+
+    // Calculate TAT and WT
+    for (i = 0; i < n; i++) {
+        tat[i] = (i == 0 ? bt[i] : tat[i - 1] + bt[i]);
+        wt[i] = tat[i] - bt[i];
+        avg_tat += tat[i];
+        avg_wt += wt[i];
+    }
+
+    printf("\nP\tBT\tTAT\tWT\n");
+    for (i = 0; i < n; i++)
+        printf("P%d\t%d\t%d\t%d\n", pid[i], bt[i], tat[i], wt[i]);
+
+    printf("\nAvg TAT: %.2f, Avg WT: %.2f\n", avg_tat / n, avg_wt / n);
+    return 0;
+}
